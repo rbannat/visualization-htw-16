@@ -9,7 +9,7 @@ $(function () {
       enabled: false
     },
     tooltip: {
-      enabled: false
+      enabled: true
     },
     xAxis: {
       visible: false
