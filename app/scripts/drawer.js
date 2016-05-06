@@ -1,3 +1,5 @@
+'use strict';
+
 var Drawer = {
     canvas: null,
 
@@ -14,7 +16,7 @@ var Drawer = {
         var x = getRandomInt(0, width - 50);
         var y = getRandomInt(0, height - 50);
         this.drawLightning(x, y, 'yellow', '1');
-        count--
+        count--;
       }
 
       //draw red lightning bolts
@@ -44,14 +46,14 @@ var Drawer = {
         var x = getRandomInt(0, width - 100);
         var y = getRandomInt(0, height - 100);
         this.drawText('rAnDom', x, y, 'black');
-        count--
+        count--;
       }
 
       //draw red lightning bolts
       for (var i = 0; i < count; i++) {
-        x = getRandomInt(10, width-100);
-        y = getRandomInt(50, height-100);
-        this.drawText('',x, y, 'black');
+        x = getRandomInt(10, width - 100);
+        y = getRandomInt(50, height - 100);
+        this.drawText('', x, y, 'black');
       }
 
       function getRandomInt(min, max) {
@@ -73,14 +75,14 @@ var Drawer = {
         var x = getRandomInt(0, width - 100);
         var y = getRandomInt(0, height - 100);
         this.drawText('rAnDom', x, y, 'black');
-        count--
+        count--;
       }
 
       //draw red lightning bolts
       for (var i = 0; i < count; i++) {
-        x = getRandomInt(10, width-100);
-        y = getRandomInt(70, height-100);
-        this.drawText('lorem',x, y, 'black');
+        x = getRandomInt(10, width - 100);
+        y = getRandomInt(70, height - 100);
+        this.drawText('lorem', x, y, 'black');
       }
 
       function getRandomInt(min, max) {
@@ -104,7 +106,7 @@ var Drawer = {
         var x = getRandomInt(0, width - 100);
         var y = getRandomInt(0, height - 100);
         this.drawLightning(x, y, 'yellow', '1.5');
-        count--
+        count--;
       }
 
       //draw colored lightning bolts
@@ -150,7 +152,6 @@ var Drawer = {
         x = x,
         y = y,
         color = color,
-        scale = 1,
         rString = text;
       if (text === '') {
         rString = randomString(5, 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
@@ -159,13 +160,15 @@ var Drawer = {
       if (this.canvas.getContext) {
         var ctx = this.canvas.getContext('2d');
 
-        ctx.font = "48px serif";
+        ctx.font = '48px serif';
         ctx.fillText(rString, x, y);
       }
 
       function randomString(length, chars) {
         var result = '';
-        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
+        for (var i = length; i > 0; --i) {
+          result += chars[Math.floor(Math.random() * chars.length)];
+        }
         return result;
       }
     }
