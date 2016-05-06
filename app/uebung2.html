@@ -61,6 +61,7 @@
 <!-- build:js scripts/vendor.js -->
 <!-- bower:js -->
 <script src="/bower_components/jquery/dist/jquery.js"></script>
+<script src="/bower_components/highcharts/highcharts.js"></script>
 <!-- endbower -->
 <!-- endbuild -->
 
@@ -79,17 +80,21 @@
 <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/tab.js"></script>
 <!-- endbuild -->
 
-<script src="/bower_components/highcharts/highcharts.js"></script>
+<!-- build:js scripts/drawer.js -->
+<script src="scripts/drawer.js"></script>
+<!-- endbuild -->
 
 <!-- build:js scripts/main.js -->
-<script src="scripts/drawer.js"></script>
 <script src="scripts/main.js"></script>
-<script>
-  Drawer.drawCase1('canvas1',true);
-  Drawer.drawCase2('canvas2',true);
-  Drawer.drawCase3('canvas3',true);
-  Drawer.drawCase4('canvas4',true);
-</script>
 <!-- endbuild -->
+<script>
+  (function () {
+    Drawer.drawCase1('canvas1', true);
+    Drawer.drawCase2('canvas2', true);
+    Drawer.drawCase3('canvas3', true);
+    Drawer.drawCase4('canvas4', true);
+  })();
+</script>
+
 </body>
 </html>
