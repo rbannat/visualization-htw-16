@@ -10,6 +10,8 @@
 
         var count = 10;
 
+        this.canvas.getContext('2d').clearRect(0, 0, width, height);
+
         //if hasFeature draw yellow lightning
         if (hasFeature) {
           var x = getRandomInt(0, width - 50);
@@ -40,6 +42,8 @@
 
         var count = 20;
 
+        this.canvas.getContext('2d').clearRect(0, 0, width, height);
+
         //if hasFeature
         if (hasFeature) {
           var x = getRandomInt(0, width - 100);
@@ -68,6 +72,8 @@
         var hasFeature = hasFeature;
 
         var count = 20;
+
+        this.canvas.getContext('2d').clearRect(0, 0, width, height);
 
         //if hasFeature
         if (hasFeature) {
@@ -99,6 +105,8 @@
         var hasFeature = hasFeature;
 
         var count = 10;
+
+        this.canvas.getContext('2d').clearRect(0, 0, width, height);
 
         //if hasFeature draw big yellow lightning
         if (hasFeature) {

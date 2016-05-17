@@ -57,6 +57,10 @@ canvas {
   background-color: #fff;
   max-width: 100%;
   height: auto;
+  opacity: 0;
+  &.show {
+    opacity: 1;
+  }
 }
 
 /* Responsive: Portrait tablets and up */
