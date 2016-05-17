@@ -95,10 +95,10 @@
   <ul>
     <li>Proband 1: [200,-, 500, 200], [200, -, 1000, 200], [200, -, 1000, 200]</li>
     <li>Proband 2: [200, 500, 1000, 200], [200, 1000, 200, 200], [200, 500, 1000, 200]</li>
-    <li>Proband 3: Testlauf 1: < 200ms, Testlauf 2: < 1400ms, Testlauf 3: < 200ms, Testlauf 4: < 500ms</li>
+    <li>Proband 3: Testlauf 1: &lt;200ms, Testlauf 2: &lt;1400ms, Testlauf 3: &lt;200ms, Testlauf 4: &lt;500ms</li>
   </ul>
   <p>
-    Testlauf 4 sollte zeigen, dass eine kombinierte Suche nicht attentiv ist. In unserem Fall hat die Farbe dominiert, sodass es relativ leicht viel die richtige Antwort zu treffen. Trotzdem wurde unter 200 ms nicht immer richtig getippt, was belegt dass eine kombinierte Suche wesentlich schwieriger ist, also nicht attentiv.
+    Testlauf 4 sollte zeigen, dass eine kombinierte Suche nicht attentiv ist. In unserem Fall hat die Farbe dominiert, sodass es relativ leicht fiel die richtige Antwort zu treffen. Trotzdem wurde unter 200 ms nicht immer richtig getippt, was belegt dass eine kombinierte Suche wesentlich schwieriger ist, also nicht attentiv.
   </p>
   <div class="footer">
   </div>
@@ -166,7 +166,7 @@
     Testcase.prototype.compareAndSaveResult = function(answer) {
       if(answer === this.results[this.currentTestIndex]) {
         console.log('Result was correct');
-        if(this.currentTestIndex < this.results.length - 1 && !this.results[this.currentTestIndex]) {
+        if(this.currentTestIndex < this.results.length - 1 /*&& !this.results[this.currentTestIndex]*/) {
           $(this.container).find('.start').prop('disabled', false);
           this.currentTestIndex++;
         } else {
