@@ -41,15 +41,15 @@
   <h2>Durchführung</h2>
 
   <p>
-    Zur Durchführung wurden 4 verschiedene Testszenario entwickelt, bei denen auf das Erkennen verschiedener Features getestet wird. Dabei wurde bei Nicht-Erkennen eines Features der Test automatisch wiederholt, bei längerer Anzeigedauer. Diese variiert von 200 bis 1400ms. Wird vom Proband ein Feature korrekt erkannt, ist das Testszenario beendet.<br>
+    Zur Durchführung wurden 4 verschiedene Testszenario entwickelt, bei denen jeweils 5 Mal auf das Erkennen des jeweiligen Features getestet wird. Dabei wurde bei mindestens einer falschen Antwort der Test automatisch wiederholt, bei längerer Anzeigedauer. Diese variiert von 200 bis 1400ms. Wird vom Probanden 5 mal korrekt geantwortet, ist das Testszenario beendet.<br>
     Es haben 3 Probanden den Test durchgeführt:
-    <ul>
-      <li>Proband 1: Weiblich, 24 Jahre, Student</li>
-      <li>Proband 2: Männlich, 23 Jahre, Student</li>
-      <li>Proband 3: Männlich, 25 Jahre, Student</li>
-    </ul>
-    Zur Vermeidung von Fehlern und Verifizierung des Ergebnisses, wurden alle Szenarios pro Proband dreimal durchgeführt.
   </p>
+
+  <ul>
+    <li>Proband 1: Weiblich, 24 Jahre, Student</li>
+    <li>Proband 2: Männlich, 23 Jahre, Student</li>
+    <li>Proband 3: Männlich, 25 Jahre, Student</li>
+  </ul>
 
   <div data-id="1" class="test-case">
     <h3>Testlauf 1</h3>
@@ -90,12 +90,15 @@
 
   <h2>Auswertung</h2>
   <p>
-    Das Ergbnis fiel bei den verschiedenen Probanden ähnlich aus. So war das Erkennen von verschiedenen Farben für alle Probanden kein Problem (Szenario 1 + 4). Das Erkennen eines Textes in einem Text mit verschiedenen Wörtern (Vielfalt) fiel sehr schwer oder funktionierte gar nicht, bei gleichbleibendem Text funktionierte dies deutlich besser. 
-    <ul>
-      <li>Proband 1: [200,-, 500, 200], [200, -, 1000, 200], [200, -, 1000, 200]</li>
-      <li>Proband 2: [200, 500, 1000, 200], [200, 1000, 200, 200], [200, 500, 1000, 200]</li>
-      <li>Proband 3: </li>
-    </ul>
+    Das Ergbnis fiel bei den verschiedenen Probanden ähnlich aus. So war das Erkennen von verschiedenen Farben allein für alle Probanden kein Problem (Szenario 1), also attentiv. Das Erkennen eines Textes in einem Text mit verschiedenen Wörtern (Vielfalt) fiel sehr schwer oder funktionierte gar nicht, bei gleichbleibendem Text funktionierte dies besser, wobei der Durschnitt trotzdem über 200ms lag also könnte man sagen Text ist nicht attentiv.
+  </p>
+  <ul>
+    <li>Proband 1: [200,-, 500, 200], [200, -, 1000, 200], [200, -, 1000, 200]</li>
+    <li>Proband 2: [200, 500, 1000, 200], [200, 1000, 200, 200], [200, 500, 1000, 200]</li>
+    <li>Proband 3: Testlauf 1: < 200ms, Testlauf 2: < 1400ms, Testlauf 3: < 200ms, Testlauf 4: < 500ms</li>
+  </ul>
+  <p>
+    Testlauf 4 sollte zeigen, dass eine kombinierte Suche nicht attentiv ist. In unserem Fall hat die Farbe dominiert, sodass es relativ leicht viel die richtige Antwort zu treffen. Trotzdem wurde unter 200 ms nicht immer richtig getippt, was belegt dass eine kombinierte Suche wesentlich schwieriger ist, also nicht attentiv.
   </p>
   <div class="footer">
   </div>
@@ -167,7 +170,7 @@
           $(this.container).find('.start').prop('disabled', false);
           this.currentTestIndex++;
         } else {
-          $(this.messageElem).text('Du hast es in ' + times[this.currentTimeIndex] + ' ms erkannt!');
+          $(this.messageElem).text('Du hast es in weniger als ' + times[this.currentTimeIndex] + ' ms erkannt!');
         }
       } else {
         console.log('Result was NOT correct');
@@ -180,7 +183,7 @@
           $(this.messageElem).text('Du hast es nicht korrekt erkannt, auch nicht in ' + times[this.currentTimeIndex] + ' ms!');
           $(this.container).find('.start').prop('disabled', true);
         }
-        
+
       }
     };
 
@@ -205,7 +208,7 @@
           a[j] = x;
       }
       return a;
-    }
+    };
 
     var draw = function(testId, showFeature) {
       switch(testId) {
@@ -218,7 +221,7 @@
         case 4: Drawer.drawCase4('canvas4', showFeature);
           break;
       }
-    }
+    };
 
     var case1 = new Testcase(1, '#canvas1');
     var case2 = new Testcase(2, '#canvas2');
