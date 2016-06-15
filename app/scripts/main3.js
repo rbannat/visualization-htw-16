@@ -13,7 +13,7 @@
 
   // setup x
   var xValue = function (d) {
-      return d.MPG;
+      return d.Horsepower;
     }, // data -> value
     xScale = d3.scale.linear().range([0, width]), // value -> display
     xMap = function (d) {
@@ -44,6 +44,11 @@
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+  // add the tooltip area to the webpage
+  var tooltip = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
   // load data
   d3.json("scripts/cars.json", function (error, data) {
 
@@ -61,7 +66,7 @@
       .attr("x", width)
       .attr("y", -6)
       .style("text-anchor", "end")
-      .text("MPG");
+      .text("Horsepower");
 
     // y-axis
     svg.append("g")
@@ -76,16 +81,46 @@
 
     // draw dots
     svg.selectAll(".dot")
-        .data(data)
+      .data(data)
       .enter()
       .append("circle")
-      .filter(function(d){ return typeof d.MPG === 'number'; }) // filter bad data
+      .filter(function (d) {
+        return typeof d.Horsepower === 'number';
+      }) // filter bad data
       .attr("class", "dot")
-      .attr("r", 3.5)
+      .attr("r", function (d) {
+        var scaleFactor = 1;
+        var r = Math.sqrt((d.Displacement / scaleFactor) / Math.PI);
+        return r;
+      })
       .attr("cx", xMap)
       .attr("cy", yMap)
       .style("fill", function (d) {
         return color(cValue(d));
+      })
+      .on("mouseover", function (d) {
+        tooltip.transition()
+          .duration(200)
+          .style("opacity", .9);
+        tooltip.html(
+          "Car: " + d.Car + "<br>" +
+          "Manufacturer: " + d.Manufacturer + "<br>" +
+          "MPG: " + d.MPG + "<br>" +
+          "Cylinders: " + d.Cylinders+ "<br>" +
+          "Displacement: " + d.Displacement+ "<br>" +
+          "Horsepower: " + d.Horsepower + "<br>" +
+          "Weight: " + d.Weight + "<br>" +
+          "Acceleration: " + d.Acceleration + "<br>" +
+          "Model Year: " + d["Model Year"] + "<br>" +
+          "Origin: " + d.Origin + "<br>"
+        )
+          .style("left", (d3.event.pageX + 5) + "px")
+          .style("top", (d3.event.pageY - 28) + "px");
+      })
+      .on("mouseout", function (d) {
+        tooltip.transition()
+          .duration(500)
+          .style("opacity", 0);
       });
   });
 
