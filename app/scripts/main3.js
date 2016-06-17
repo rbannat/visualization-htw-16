@@ -79,22 +79,27 @@
       .attr("dy", ".71em")
       .text("Acceleration");
 
+    var arc = d3.svg.arc()
+      .innerRadius(0)
+      .outerRadius(function (d) {
+          var scaleFactor = 5;
+          var r = Math.sqrt((d.Weight / scaleFactor) / Math.PI);
+          return r;
+        })
+      .startAngle(0)
+      .endAngle(2 * Math.PI);
+
     // draw dots
     svg.selectAll(".dot")
       .data(data)
       .enter()
-      .append("circle")
+      .append("path")
       .filter(function (d) {
         return typeof d.Horsepower === 'number';
       }) // filter bad data
-      .attr("class", "dot")
-      .attr("r", function (d) {
-        var scaleFactor = 1;
-        var r = Math.sqrt((d.Displacement / scaleFactor) / Math.PI);
-        return r;
-      })
-      .attr("cx", xMap)
-      .attr("cy", yMap)
+      .attr("transform", function(d) { return "translate(" + xScale(xValue(d)) + "," + yScale(yValue(d)) + ")"; })
+      .attr("class", "arc")
+      .attr("d", arc )
       .style("fill", function (d) {
         return color(cValue(d));
       })
