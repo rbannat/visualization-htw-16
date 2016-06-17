@@ -119,7 +119,7 @@
       })
       .on("mouseout", function (d) {
         tooltip.transition()
-          .duration(500)
+          .duration(200)
           .style("opacity", 0);
       });
   });
