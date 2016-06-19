@@ -40,6 +40,16 @@
   </p>
 
   <h2>Ergebnis</h2>
+  <div class="dropdown">
+    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      Data source
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+      <li><a id="all" href="#">All cars</a></li>
+      <li><a id="average" href="#">Manufacturer average</a></li>
+    </ul>
+  </div>
   <div id="visualisation">
 
   </div>
@@ -56,7 +66,7 @@
 <!-- build:js scripts/vendor.js -->
 <!-- bower:js -->
 <script src="/bower_components/jquery/dist/jquery.js"></script>
-<script src="/bower_components/d3/d3.min.js"></script>
+<script src="/bower_components/d3/d3.js"></script>
 <!-- endbower -->
 <!-- endbuild -->
 
@@ -73,10 +83,6 @@
 <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/scrollspy.js"></script>
 <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/collapse.js"></script>
 <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/tab.js"></script>
-<!-- endbuild -->
-
-<!-- build:js scripts/drawer.js -->
-<script src="scripts/drawer.js"></script>
 <!-- endbuild -->
 
 <!-- build:js scripts/main.js -->

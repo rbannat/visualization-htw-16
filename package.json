@@ -39,5 +39,8 @@
         "single"
       ]
     }
+  },
+  "dependencies": {
+    "babel-preset-stage-0": "^6.5.0"
   }
 }
