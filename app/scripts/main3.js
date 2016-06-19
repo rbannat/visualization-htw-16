@@ -1,16 +1,15 @@
 (function () {
 
+
   var margin = {top: 20, right: 20, bottom: 30, left: 40},
     width = 900 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
-
-  /*
+/*
    * value accessor - returns the value to encode for a given data object.
    * scale - maps value to a visual display encoding, such as a pixel position.
    * map function - maps from data value to display value
    * axis - sets up axis
    */
-
   // setup x
   var xValue = function (d) {
       return d.Horsepower;
@@ -37,86 +36,89 @@
     },
     color = d3.scale.category10();
 
-// add the graph canvas to the body of the webpage
-  var svg = d3.select("#visualisation").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    var redraw = function(data) {
 
-  // add the tooltip area to the webpage
   var tooltip = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
-
-  // x-axis
-  svg.append("g")
-    .attr("class", "x axis")
-    .attr("transform", "translate(0," + height + ")")
-    .call(xAxis)
-    .append("text")
-    .attr("class", "label")
-    .attr("x", width)
-    .attr("y", -6)
-    .style("text-anchor", "end")
-    .text("Horsepower");
-
-  // y-axis
-  svg.append("g")
-    .attr("class", "y axis")
-    .call(yAxis)
-    .append("text")
-    .attr("class", "label")
-    .attr("y", 6)
-    .attr("x", 6)
-    .attr("dy", ".71em")
-    .text("Acceleration");
-
-  var arc = d3.svg.arc()
-    .innerRadius(0)
-    .outerRadius(function (d) {
+      
+    var arc = d3.svg.arc()
+      .outerRadius(function (d) {
         var scaleFactor = 5;
-        var r = Math.sqrt((d.Weight / scaleFactor) / Math.PI);
+        var r = Math.sqrt((d.data.Weight / scaleFactor) / Math.PI);
         return r;
       })
-    .startAngle(0)
-    .endAngle(2 * Math.PI);
+      .innerRadius(0);
 
-    var redraw = function(data) {
+    var pie = d3.layout.pie()
+      .sort(null)
+      .value(function(d) { return d.Displacement / d.Cylinders; });
 
-        // don't want dots overlapping axis, so add in buffer to data domain
-      xScale.domain([d3.min(data, xValue) - 1, d3.max(data, xValue) + 1]);
-      yScale.domain([d3.min(data, yValue) - 1, d3.max(data, yValue) + 1]);
+    var color = d3.scale.category10();
 
-      // draw dots
-      svg.selectAll(".dot")
-        .data(data)
-        .enter()
-        .append("path")
-        .filter(function (d) {
-          return typeof d.Horsepower === 'number';
-        }) // filter bad data
-        .attr("transform", function(d) { return "translate(" + xScale(xValue(d)) + "," + yScale(yValue(d)) + ")"; })
-        .attr("class", "arc")
-        .attr("d", arc )
-        .style("fill", function (d) {
-          return color(cValue(d));
-        })
-        .on("mouseover", function (d) {
+    var xAxis = d3.svg.axis()
+      .scale(xScale)
+      .orient("bottom");
+
+    var yAxis = d3.svg.axis()
+      .scale(yScale)
+      .orient("left");
+
+    var svg = d3.select("#visualisation").append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    // don't want dots overlapping axis, so add in buffer to data domain
+    xScale.domain([d3.min(data, xValue) - 1, d3.max(data, xValue) + 1]);
+    yScale.domain([d3.min(data, yValue) - 1, d3.max(data, yValue) + 1]);
+
+    svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+    svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+      .append("text");
+
+    var pies = svg.selectAll(".pie")
+      .data(data)
+      .enter().append("g")
+      .attr('class', 'pie')
+      .attr("transform", function(d) { return "translate(" + xScale(xValue(d)) + "," + yScale(yValue(d)) + ")"; })
+      
+    pies.selectAll(".arc")
+      .data(function(d){
+        let cylArr = [];
+        for (var i = 0; i < parseInt(d.Cylinders); i++) {
+          cylArr.push(d);
+        }
+        return pie(cylArr);
+      })
+      .enter()
+      .append('path')
+      .attr('d', arc)
+      .style("fill", function(d, i) {
+        return color(i);
+      })
+      .on("mouseover", function (d) {
           tooltip.transition()
             .duration(200)
             .style("opacity", .9);
           tooltip.html(
-            "Car: " + d.Car + "<br>" +
-            "Manufacturer: " + d.Manufacturer + "<br>" +
-            "MPG: " + d.MPG + "<br>" +
-            "Cylinders: " + d.Cylinders+ "<br>" +
-            "Displacement: " + d.Displacement+ "<br>" +
-            "Horsepower: " + d.Horsepower + "<br>" +
-            "Weight: " + d.Weight + "<br>" +
-            "Acceleration: " + d.Acceleration + "<br>" +
-            "Model Year: " + d["Model Year"] + "<br>" +
-            "Origin: " + d.Origin + "<br>"
+            "Car: " + d.data.Car + "<br>" +
+            "Manufacturer: " + d.data.Manufacturer + "<br>" +
+            "MPG: " + d.data.MPG + "<br>" +
+            "Cylinders: " + d.data.Cylinders+ "<br>" +
+            "Displacement: " + d.data.Displacement+ "<br>" +
+            "Horsepower: " + d.data.Horsepower + "<br>" +
+            "Weight: " + d.data.Weight + "<br>" +
+            "Acceleration: " + d.data.Acceleration + "<br>" +
+            "Model Year: " + d.data["Model Year"] + "<br>" +
+            "Origin: " + d.data.Origin + "<br>"
           )
             .style("left", (d3.event.pageX + 5) + "px")
             .style("top", (d3.event.pageY - 28) + "px");
@@ -125,7 +127,8 @@
           tooltip.transition()
             .duration(200)
             .style("opacity", 0);
-        });
+        });;
+
     };
 
   // load data
