@@ -34,14 +34,14 @@
   var cValue = function (d) {
       return d.Manufacturer;
     },
-    color = d3.scale.category10();
+    color = d3.scale.category20();
 
     var redraw = function(data) {
 
   var tooltip = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
-      
+
     var arc = d3.svg.arc()
       .outerRadius(function (d) {
         var scaleFactor = 5;
@@ -53,8 +53,6 @@
     var pie = d3.layout.pie()
       .sort(null)
       .value(function(d) { return d.Displacement / d.Cylinders; });
-
-    var color = d3.scale.category10();
 
     var xAxis = d3.svg.axis()
       .scale(xScale)
@@ -89,7 +87,31 @@
       .enter().append("g")
       .attr('class', 'pie')
       .attr("transform", function(d) { return "translate(" + xScale(xValue(d)) + "," + yScale(yValue(d)) + ")"; })
-      
+      .on("mouseover", function (d) {
+        tooltip.transition()
+          .duration(200)
+          .style("opacity", .9);
+        tooltip.html(
+          "Car: " + d.Car + "<br>" +
+          "Manufacturer: " + d.Manufacturer + "<br>" +
+          "MPG: " + d.MPG + "<br>" +
+          "Cylinders: " + d.Cylinders+ "<br>" +
+          "Displacement: " + d.Displacement+ "<br>" +
+          "Horsepower: " + d.Horsepower + "<br>" +
+          "Weight: " + d.Weight + "<br>" +
+          "Acceleration: " + d.Acceleration + "<br>" +
+          "Model Year: " + d["Model Year"] + "<br>" +
+          "Origin: " + d.Origin + "<br>"
+        )
+          .style("left", (d3.event.pageX + 5) + "px")
+          .style("top", (d3.event.pageY - 28) + "px");
+      })
+      .on("mouseout", function (d) {
+        tooltip.transition()
+          .duration(200)
+          .style("opacity", 0);
+      });
+
     pies.selectAll(".arc")
       .data(function(d){
         let cylArr = [];
@@ -102,32 +124,9 @@
       .append('path')
       .attr('d', arc)
       .style("fill", function(d, i) {
-        return color(i);
+        return color(cValue(d.data));
       })
-      .on("mouseover", function (d) {
-          tooltip.transition()
-            .duration(200)
-            .style("opacity", .9);
-          tooltip.html(
-            "Car: " + d.data.Car + "<br>" +
-            "Manufacturer: " + d.data.Manufacturer + "<br>" +
-            "MPG: " + d.data.MPG + "<br>" +
-            "Cylinders: " + d.data.Cylinders+ "<br>" +
-            "Displacement: " + d.data.Displacement+ "<br>" +
-            "Horsepower: " + d.data.Horsepower + "<br>" +
-            "Weight: " + d.data.Weight + "<br>" +
-            "Acceleration: " + d.data.Acceleration + "<br>" +
-            "Model Year: " + d.data["Model Year"] + "<br>" +
-            "Origin: " + d.data.Origin + "<br>"
-          )
-            .style("left", (d3.event.pageX + 5) + "px")
-            .style("top", (d3.event.pageY - 28) + "px");
-        })
-        .on("mouseout", function (d) {
-          tooltip.transition()
-            .duration(200)
-            .style("opacity", 0);
-        });;
+
 
     };
 
@@ -152,8 +151,8 @@
       let obj = array.reduce(function(prev, current, index, array){
          if(!(current.Manufacturer in prev.result)) {
             current.count = 1;
-            prev.result[current.Manufacturer] = current;  
-         } 
+            prev.result[current.Manufacturer] = current;
+         }
          else {
             if(prev.result[current.Manufacturer]) {
                 if(checkValidKeys(current, sumableKeys)) {
@@ -164,15 +163,15 @@
                   }
                 }
             }
-         }  
+         }
          return prev;
       },{result: {}}).result;
       let data = [];
       Object.keys(obj).forEach(function(key) {
         data.push(obj[key]);
-      });  
-      return data;    
-    }
+      });
+      return data;
+    };
 
     var checkValidKeys = function(object, checkableKeys) {
       for (var i = 0; i < checkableKeys.length; i++) {
@@ -182,7 +181,7 @@
       }
       return true;
     }
- 
+
   });
 
 })();
