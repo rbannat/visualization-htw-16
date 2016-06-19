@@ -52,7 +52,8 @@
 
     var pie = d3.layout.pie()
       .sort(null)
-      .value(function(d) { return d.Displacement / d.Cylinders; });
+      .value(function(d) { return d.Displacement / d.Cylinders; })
+      .padAngle(.1);
 
     var xAxis = d3.svg.axis()
       .scale(xScale)
