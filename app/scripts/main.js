@@ -1,6 +1,4 @@
-$(function () {
-  'use strict';
-
+(function () {
   Highcharts.setOptions({
     chart: {
       type: 'column'
@@ -62,4 +60,4 @@ $(function () {
       data: [9.0]
     }]
   });
-});
+})();

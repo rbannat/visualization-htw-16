@@ -1,0 +1,97 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="description" content=""><meta name="viewport" content="width=device-width,initial-scale=1"><title>Visualization SS 2016 René Bannat + Stefan Schwartze</title><!--<link rel="apple-touch-icon" href="apple-touch-icon.png">--><!-- Place favicon.ico in the root directory --><link rel="stylesheet" href="styles/main.css"></head><body><!--[if lt IE 10]>
+<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
+  your browser</a> to improve your experience.</p>
+<![endif]--><div class="container"><h1>Visualization SS 2016, René Bannat + Stefan Schwartze</h1><nav><ul class="nav nav-pills"><li><a href="index.html">Übung 1</a></li><li class="active"><a href="#">Übung 2</a></li><li><a href="uebung3.html">Übung 3</a></li></ul></nav><h2>Aufgabe</h2><p></p><h2>Durchführung</h2><p>Zur Durchführung wurden 4 verschiedene Testszenario entwickelt, bei denen jeweils 5 Mal auf das Erkennen des jeweiligen Features getestet wird. Dabei wurde bei mindestens einer falschen Antwort der Test automatisch wiederholt, bei längerer Anzeigedauer. Diese variiert von 200 bis 1400ms. Wird vom Probanden 5 mal korrekt geantwortet, ist das Testszenario beendet.<br>Es haben 3 Probanden den Test durchgeführt:</p><ul><li>Proband 1: Weiblich, 24 Jahre, Student</li><li>Proband 2: Männlich, 23 Jahre, Student</li><li>Proband 3: Männlich, 25 Jahre, Student</li></ul><div data-id="1" class="test-case"><h3>Testlauf 1</h3><h4>Ist ein gelber Blitz vorhanden?</h4><button type="button" class="btn btn-primary start">Starte Testlauf</button> <button type="button" data-answer="true" class="btn btn-success answer" disabled="disabled">Ja</button> <button type="button" data-answer="false" class="btn btn-danger answer" disabled="disabled">Nein</button><p class="message"></p><canvas id="canvas1" width="800" height="400"></canvas></div><div data-id="2" class="test-case"><h3>Testlauf 2</h3><h4>Ist das Wort "rAnDom" enthalten?</h4><button type="button" class="btn btn-primary start">Starte Testlauf</button> <button type="button" data-answer="true" class="btn btn-success answer" disabled="disabled">Ja</button> <button type="button" data-answer="false" class="btn btn-danger answer" disabled="disabled">Nein</button><p class="message"></p><canvas id="canvas2" width="800" height="400"></canvas></div><div data-id="3" class="test-case"><h3>Testlauf 3</h3><h4>Ist das Wort "rAnDom" enthalten?</h4><button type="button" class="btn btn-primary start">Starte Testlauf</button> <button type="button" data-answer="true" class="btn btn-success answer" disabled="disabled">Ja</button> <button type="button" data-answer="false" class="btn btn-danger answer" disabled="disabled">Nein</button><p class="message"></p><canvas id="canvas3" width="800" height="400"></canvas></div><div data-id="4" class="test-case"><h3>Testlauf 4</h3><h4>Ist ein großer gelber Blitz vorhanden?</h4><button type="button" class="btn btn-primary start">Starte Testlauf</button> <button type="button" data-answer="true" class="btn btn-success answer" disabled="disabled">Ja</button> <button type="button" data-answer="false" class="btn btn-danger answer" disabled="disabled">Nein</button><p class="message"></p><canvas id="canvas4" width="800" height="400"></canvas></div><h2>Auswertung</h2><p>Das Ergbnis fiel bei den verschiedenen Probanden ähnlich aus. So war das Erkennen von verschiedenen Farben allein für alle Probanden kein Problem (Szenario 1), also attentiv. Das Erkennen eines Textes in einem Text mit verschiedenen Wörtern (Vielfalt) fiel sehr schwer oder funktionierte gar nicht, bei gleichbleibendem Text funktionierte dies besser, wobei der Durschnitt trotzdem über 200ms lag also könnte man sagen Text ist nicht attentiv.</p><ul><li>Proband 1: [200,-, 500, 200], [200, -, 1000, 200], [200, -, 1000, 200]</li><li>Proband 2: [200, 500, 1000, 200], [200, 1000, 200, 200], [200, 500, 1000, 200]</li><li>Proband 3: Testlauf 1: &lt;200ms, Testlauf 2: &lt;1400ms, Testlauf 3: &lt;200ms, Testlauf 4: &lt;500ms</li></ul><p>Testlauf 4 sollte zeigen, dass eine kombinierte Suche nicht attentiv ist. In unserem Fall hat die Farbe dominiert, sodass es relativ leicht fiel die richtige Antwort zu treffen. Trotzdem wurde unter 200 ms nicht immer richtig getippt, was belegt dass eine kombinierte Suche wesentlich schwieriger ist, also nicht attentiv.</p><div class="footer"></div></div><script src="scripts/vendor.js"></script><script src="scripts/plugins.js"></script><script src="scripts/drawer.js"></script><script>(function () {
+
+    var results = [];
+    var times = [200, 500, 1000, 1400];
+    var containers = $('.test-case');
+
+    var Testcase = function(id, canvas) {
+      this.canvas = canvas;
+      this.container = $(canvas).parent();
+      this.messageElem = $(this.container).find('.message');
+      this.id = id;
+      this.currentTestIndex = 0;
+      this.currentTimeIndex = 0;
+      this.results = this.generateCase();
+
+      var self = this;
+
+      $(this.container).find('.start').click(function(e) {
+        $(self.container).find('.start').prop('disabled', true);
+        self.showHideDrawing(self.id, times[self.currentTimeIndex]);
+      });
+
+      $(this.container).find('.answer').click(function(e) {
+        $(self.container).find('.answer').prop('disabled', true);
+        self.compareAndSaveResult($(e.currentTarget).data('answer'));
+      });
+    };
+
+    Testcase.prototype.compareAndSaveResult = function(answer) {
+      if(answer === this.results[this.currentTestIndex]) {
+        console.log('Result was correct');
+        if(this.currentTestIndex < this.results.length - 1 /*&& !this.results[this.currentTestIndex]*/) {
+          $(this.container).find('.start').prop('disabled', false);
+          this.currentTestIndex++;
+        } else {
+          $(this.messageElem).text('Du hast es in weniger als ' + times[this.currentTimeIndex] + ' ms erkannt!');
+        }
+      } else {
+        console.log('Result was NOT correct');
+        if(this.currentTimeIndex < times.length - 1) {
+          this.currentTimeIndex++;
+          this.currentTestIndex = 0;
+          this.results = this.generateCase();
+          $(this.container).find('.start').prop('disabled', false);
+        } else {
+          $(this.messageElem).text('Du hast es nicht korrekt erkannt, auch nicht in ' + times[this.currentTimeIndex] + ' ms!');
+          $(this.container).find('.start').prop('disabled', true);
+        }
+
+      }
+    };
+
+    Testcase.prototype.showHideDrawing = function() {
+      var self = this;
+      console.log(times[self.currentTimeIndex]);
+      draw(self.id, self.results[self.currentTestIndex]);
+      $('#canvas' + self.id).addClass('show');
+      setTimeout(function() {
+        $('#canvas' + self.id).removeClass('show');
+        $(self.container).find('.answer').prop('disabled', false);
+      }, times[self.currentTimeIndex]);
+    };
+
+    Testcase.prototype.generateCase = function() {
+      var a = [false, false, true, false, false];
+      var j, x, i;
+      for (i = a.length; i; i -= 1) {
+          j = Math.floor(Math.random() * i);
+          x = a[i - 1];
+          a[i - 1] = a[j];
+          a[j] = x;
+      }
+      return a;
+    };
+
+    var draw = function(testId, showFeature) {
+      switch(testId) {
+        case 1: Drawer.drawCase1('canvas1', showFeature);
+          break;
+        case 2: Drawer.drawCase2('canvas2', showFeature);
+          break;
+        case 3: Drawer.drawCase3('canvas3', showFeature);
+          break;
+        case 4: Drawer.drawCase4('canvas4', showFeature);
+          break;
+      }
+    };
+
+    var case1 = new Testcase(1, '#canvas1');
+    var case2 = new Testcase(2, '#canvas2');
+    var case3 = new Testcase(3, '#canvas3');
+    var case4 = new Testcase(4, '#canvas4');
+
+  })();</script></body></html>
