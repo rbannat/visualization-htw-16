@@ -2,8 +2,19 @@
   var width = 960,
     height = 500;
 
+  var zoom = d3.behavior.zoom()
+    .scaleExtent([0, 10])
+    .on("zoom", zoom);
+
+  var drag = d3.behavior.drag()
+    .origin(function(d) { return d; })
+    .on("dragstart", dragstarted)
+    .on("drag", dragged)
+    .on("dragend", dragended);
+
+
   var radius = d3.scale.sqrt()
-    .domain([0, 20000])
+    .domain([0, 20])
     .range([0, 20]);
 
   var force = d3.layout.force()
@@ -13,21 +24,51 @@
 
   var svg = d3.select("#visualisation").append("svg")
     .attr("width", width)
-    .attr("height", height);
+    .attr("height", height)
+    .call(zoom);
 
-  d3.xml("scripts/Old_New_Testament_Social_Network_short.xml", "application/xml", function (error, xml) {
+  var container = svg.append('g');
+
+
+  function zoom() {
+    container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+  }
+
+  function dragstarted(d) {
+    d3.event.sourceEvent.stopPropagation();
+
+    d3.select(this).classed("dragging", true);
+    force.start();
+  }
+
+  function dragged(d) {
+
+    d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
+
+  }
+
+  function dragended(d) {
+
+    d3.select(this).classed("dragging", false);
+  }
+
+  d3.xml("scripts/Old_New_Testament_Social_Network.xml", "application/xml", function (error, xml) {
     if (error) throw error;
 
     var nodes = [].map.call(xml.querySelectorAll("node"), function (node) {
         return {
-          id: node.getAttribute("id") - 1
+          id: parseInt(node.getAttribute("id")),
+          text: node.querySelector('data').textContent
         };
       }),
       links = [].map.call(xml.querySelectorAll("edge"), function (edge) {
+        var source = parseInt(edge.getAttribute("source"));
+        var target = parseInt(edge.getAttribute("target"));
         return {
-          source: edge.getAttribute("source") -1,
-          target: edge.getAttribute("target") -1
-        };
+          source: typeof(nodes[source]) !== 'undefined' ? source : 1,
+          target: typeof(nodes[target]) !== 'undefined' ? target : 1,
+          weight: edge.querySelector('data').textContent
+        }
       }),
       root = nodes[0];
 
@@ -40,19 +81,25 @@
       .links(links)
       .start();
 
-    var link = svg.selectAll(".link")
+    var link = container.selectAll(".link")
       .data(links)
       .enter().append("line")
       .attr("class", "link");
 
-    var node = svg.selectAll(".node")
+    var node = container.selectAll(".node")
       .data(nodes)
       .enter().append("circle")
       .attr("class", "node")
-      .attr("r", function (d) {
-        return radius(d.textContent) || 5;
+      .attr("id", function (d) {
+        return d.id;
       })
-      .call(force.drag);
+      .attr("r", function (d) {
+        return radius(2 + d.weight * 4);
+      })
+      .attr("dx", 12)
+      .attr("dy", ".35em")
+      .text(function(d) { return d.text })
+      .call(drag);
 
     force.on("tick", function () {
       link.attr("x1", function (d) {
@@ -66,6 +113,9 @@
         })
         .attr("y2", function (d) {
           return d.target.y;
+        })
+        .attr("stroke-width", function (d) {
+          return (d.weight);
         });
 
       node.attr("cx", function (d) {
@@ -75,5 +125,8 @@
           return d.y;
         });
     });
+
   });
+
+
 })();

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <graphml xmlns="http://graphml.graphdrawing.org/xmlns">
 <graph edgedefault="undirected">
- 
+
 <!-- data schema -->
 <key id="name" for="node" attr.name="name" attr.type="string"/>
 <key id="weight" for="edge" attr.name="weight" attr.type="float"/>
-  
-<!-- nodes -->  
+
+<!-- nodes -->
 <node id="1">
  <data key="name">Aaron</data>
 </node>
