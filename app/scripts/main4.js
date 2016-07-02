@@ -88,18 +88,30 @@
 
     var node = container.selectAll(".node")
       .data(nodes)
-      .enter().append("circle")
+      .enter()
+      .append("g")
       .attr("class", "node")
+      .call(drag);
+
+    node.append("circle")
+      .attr("content", function (d) {
+        return d.text.toLowerCase();
+      })
       .attr("id", function (d) {
         return d.id;
       })
       .attr("r", function (d) {
         return radius(2 + d.weight * 4);
-      })
+      });
+
+    node.append("text")
       .attr("dx", 12)
       .attr("dy", ".35em")
-      .text(function(d) { return d.text })
-      .call(drag);
+      .attr("text-anchor", "middle") 
+      .style('fill', 'red')
+      .text(function(d) {
+        return d.text;
+      });
 
     force.on("tick", function () {
       link.attr("x1", function (d) {
@@ -118,12 +130,16 @@
           return (d.weight);
         });
 
-      node.attr("cx", function (d) {
-        return d.x;
-      })
-        .attr("cy", function (d) {
-          return d.y;
-        });
+        node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+    });
+
+    $('#search').click(function(e) {
+      var text = $('#searchBox').val().toLowerCase();
+      d3.selectAll('.node circle').transition().attr("fill", "black");
+
+      if(text !== '') {
+        d3.selectAll(".node circle[content*=" + text + "]").transition().attr("fill", "blue");  
+      }
     });
 
   });
