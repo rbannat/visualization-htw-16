@@ -43,7 +43,7 @@ function lint(files, options) {
           'jQuery': false,
           '$': true,
           'Highcharts': true
-        },
+        }
       }))
       .pipe($.eslint.format())
       .pipe($.if(!browserSync.active, $.eslint.failAfterError()));
